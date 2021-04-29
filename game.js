@@ -1,5 +1,7 @@
 const question = document.getElementById('question');
 const choices = Array.from(document.getElementsByClassName('choice-text'));
+const progressText = document.getElementById('progressText');
+const scoreText = document.getElementById('score');
 
 let currentQuestion = {};
 let acceptingAnswers = false;
@@ -57,6 +59,9 @@ getNewQuestion = () => {
     }
 
     questionCounter++;
+    //update the question counter dynamically
+    progressText.innerText = `Question ${questionCounter}/${MAX_QUESTIONS}`;
+
     const questionIndex = Math.floor(Math.random() * availableQuestions.length);
     currentQuestion = availableQuestions[questionIndex];
     question.innerText = currentQuestion.question;
@@ -88,7 +93,11 @@ choices.forEach(choice => {
         
         //Another way to change class name using ternary operator is
         const classToApply = selectedAnswer == currentQuestion.answer ? 'correct' : 'incorrect';
-        console.log(classToApply);
+        
+        //call incrementScore function when the ans is correct by checking the class name
+        if (classToApply == 'correct') {
+            incrementScore(CORRECT_BONUS);
+        }
 
         //choose whole container element use parentelement and use classList to apply class in JS.
         selectedChoice.parentElement.classList.add(classToApply);
@@ -106,5 +115,10 @@ choices.forEach(choice => {
     });
 });
 
+//increment score and update score text
+incrementScore = num => {
+    score += num;
+    scoreText.innerText = score;
+}
 
 startGame();
