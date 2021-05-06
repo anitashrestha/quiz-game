@@ -3,6 +3,8 @@ const choices = Array.from(document.getElementsByClassName('choice-text'));
 const progressText = document.getElementById('progressText');
 const scoreText = document.getElementById('score');
 const progressBarFull = document.getElementById('progressBarFull');
+const loader = document.getElementById('loader');
+const game = document.getElementById('game');
 let currentQuestion = {};
 let acceptingAnswers = false;
 let score = 0;
@@ -42,8 +44,7 @@ fetch(
         })
 
         return formattedQuestion;
-    })
-    //questions = loadedQuestions;
+    });
     startGame();
 })
 .catch(err => { //if something goes wrong this will throw the message
@@ -60,6 +61,8 @@ startGame = () => {
     score = 0;
     availableQuestions = [ ...questions];//spread operator(3 dots) says to use the array and spread each of its items and put them into new Array
     getNewQuestion();
+    game.classList.remove('hidden');
+    loader.classList.add('hidden');
 }
 
 getNewQuestion = () => {
