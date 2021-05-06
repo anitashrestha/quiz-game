@@ -12,14 +12,38 @@ let availableQuestions = [];
 
 let questions = [];
 
-//fetch question form API and
-fetch("questions.json")
+//fetch API to load questions from Open Trivia DB API 
+fetch(
+    "https://opentdb.com/api.php?amount=10&category=9&difficulty=easy&type=multiple"
+)
 .then(res => {
     return res.json(); 
 })
 .then(loadedQuestions => {
-    console.log(loadedQuestions);
-    questions = loadedQuestions;
+    console.log(loadedQuestions.results);
+//load question and format it into the format we need and return the array of question
+    questions = loadedQuestions.results.map(loadedQuestion => {
+        const formattedQuestion ={
+            question: loadedQuestion.question
+        };
+//spread operator(...) , 
+        const answerChoices = [ ...loadedQuestion.incorrect_answers];
+        formattedQuestion.answer = Math.floor(Math.random() * 3) + 1; //gives random index betn 0 and 3
+        
+        answerChoices.splice(
+            formattedQuestion.answer -1,
+             0, 
+             loadedQuestion.correct_answer
+        );
+    
+        //iterate through each ans choices we have 
+        answerChoices.forEach((choice, index) => {
+            formattedQuestion["choice" + (index + 1)] = choice;
+        })
+
+        return formattedQuestion;
+    })
+    //questions = loadedQuestions;
     startGame();
 })
 .catch(err => { //if something goes wrong this will throw the message
